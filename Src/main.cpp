@@ -26,6 +26,11 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "PID.h"
+
+extern "C" {
+#include "mpu6050.h"
+}
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -49,7 +54,7 @@ void ESC_Init(void);
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+MPU6050_t MPU6050;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,7 +104,7 @@ int main(void)
   MX_TIM15_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  while (MPU6050_Init(&hi2c1) == 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -108,7 +113,7 @@ int main(void)
 
   {
     /* USER CODE END WHILE */
-
+	MPU6050_Read_All(&hi2c1, &MPU6050);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -174,15 +179,15 @@ void ESC_Init(void)
 
 	HAL_Delay(2000);
 
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 1000);
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 1000);
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 1000);
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 1000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 2000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 2000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 2000);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 2000);
 
-	__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
-	__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_2, 1000);
+	__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 2000);
+	__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_2, 2000);
 
-	HAL_Delay(2000);
+	HAL_Delay(1000);
 }
 /* USER CODE END 4 */
 
